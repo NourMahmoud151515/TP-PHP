@@ -1,1 +1,26 @@
+<?php
+class SessionManager {
+    public function __construct() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();}
+        if (!isset($_SESSION['visits'])) {
+            $_SESSION['visits'] = 0;}
+    }
+
+    public function incrementVisit() {
+        $_SESSION['visits']++;
+    }
+
+    public function getVisitCount() {
+        return $_SESSION['visits'];
+    }
+
+    public function resetSession() {
+        session_destroy();
+        session_start();
+        session_regenerate_id(true); 
+        $_SESSION['visits'] = 0; 
+    }
+}
+?>
 
