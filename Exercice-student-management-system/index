@@ -26,5 +26,18 @@ $isAdmin = ($_SESSION['role'] === 'admin');
         </ul>
     </div>
 </nav>
+<div class="container mt-4 text-center">
+    <h2>Hello, <?php echo $_SESSION['username']; ?>!</h2>
+
+    <?php if ($isAdmin) { ?>
+        <p>Welcome back, Admin! You have full control over the system.</p>
+        <p>Manage students, sections, and oversee the platform.</p>
+    <?php } else { ?>
+        <p>Welcome, Student! You can view student lists and section details.</p>
+        <p>If you need any updates, please contact an administrator.</p>
+    <?php } ?>
+</div>
+
+
 </body>
 </html>
