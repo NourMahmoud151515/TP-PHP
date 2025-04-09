@@ -28,6 +28,47 @@ $isAdmin = ($_SESSION['role'] === 'admin');
         </ul>
     </div>
 </nav>
+
+<div class="container mt-4">
+    <h2>Liste des Sections</h2>
+
+    <?php if ($isAdmin) { ?>
+        <a href="add_section.php" class="btn btn-success mb-3">Ajouter une Section</a>
+    <?php } ?>
+
+    <table class="table table-striped" id="sectionsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Désignation</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $query = "SELECT * FROM section";
+            $result = mysqli_query($conn, $query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>
+                    <td>{$row['id']}</td>
+                    <td>{$row['designation']}</td>
+                    <td>{$row['description']}</td>
+                    <td>
+                        <a href='view_section.php?id={$row['id']}' class='btn btn-info'>View</a>";
+
+                if ($isAdmin) {
+                    echo "<a href='edit_section.php?id={$row['id']}' class='btn btn-warning'>Edit</a>
+                          <a href='delete_section.php?id={$row['id']}' class='btn btn-danger'>Delete</a>";
+                }
+
+                echo "</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>
 
