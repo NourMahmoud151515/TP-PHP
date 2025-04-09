@@ -51,5 +51,67 @@
       }
     </style>
   </head>
-  <body></body>
+  <body><?php
+  class Etudiant {
+      private $nom;
+      private $notes;
+  
+      public function __construct($nom, $notes) {
+          $this->nom=$nom;
+          $this->notes=$notes;
+      }
+  
+      public function calculerMoyenne() {
+          return count($this->notes) > 0 ? array_sum($this->notes) / count($this->notes) : 0;
+      }
+  
+      public function afficherNotes() {
+        foreach ($this->notes as $note) {
+          echo "<span style='padding:5px; margin:2px; background-color:" . $this->getCouleur($note) . ";'>$note</span> ";
+        }
+      }
+      public function moyenne() {
+        $s = 0;
+        $i = 0;
+        foreach ($this->notes as $note) { 
+          $s = $s + $note;
+          $i = $i + 1;
+        }
+        return ($i > 0) ? ($s / $i) : 0; 
+      }
+      public function admis(){
+        if ($this->moyenne()>=10){
+          echo"admis";}
+        else{
+          echo"non admis";
+        }
+      }
+  
+      public function getCouleur($note) {
+          if ($note < 10) return "red";
+          if ($note > 10) return "green";
+          return "orange";
+      }
+  
+      public function afficherCarte() {
+          echo "<div class='card'>
+                  <h3>{$this->nom}</h3>";
+          foreach ($this->notes as $note) {
+              echo "<div class='note {$this->getCouleur($note)}'>$note</div>";
+          }
+          echo "<div class='moyenne'>Votre moyenne est " . number_format($this->calculerMoyenne(), 2) . "</div>
+                </div>";}
+  }
+  
+  
+  $etudiants = [
+      new Etudiant("Aymen", [11, 13, 18, 7, 10, 13, 2, 5, 1]),
+      new Etudiant("Skander", [15, 9, 8, 16])
+  ];
+  
+  foreach ($etudiants as $etudiant) {
+      $etudiant->afficherCarte();
+  }
+  ?>
+  </body>
 </html>
