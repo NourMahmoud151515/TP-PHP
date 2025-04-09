@@ -1,1 +1,15 @@
+<?php
+require_once 'deuxieme.php';
+
+$session = new SessionManager();
+
+if (isset($_POST['reset'])) {
+    $session->resetSession();
+    header("Location: index.php");
+    exit();
+}
+
+$session->incrementVisit();
+$visits = $session->getVisitCount();
+?>
 
