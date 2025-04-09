@@ -1,1 +1,130 @@
+<?php
+class AttackPokemon {
+    public int $attackMinimal;
+    public int $attackMaximal;
+    public float $specialAttack;
+    public int $probabilitySpecialAttack;
+
+    public function __construct($min, $max, $special, $probability) {
+        $this->attackMinimal = $min;
+        $this->attackMaximal = $max;
+        $this->specialAttack = $special;
+        $this->probabilitySpecialAttack = $probability;
+    }
+
+    public function getAttackPoints(): int {
+        return rand($this->attackMinimal, $this->attackMaximal);
+    }
+}
+class Pokemon {
+    private string $name;
+    private string $imageUrl;
+    private int $hp;
+    private AttackPokemon $attackPokemon;
+
+    public function __construct($name, $imageUrl, $hp, AttackPokemon $attackPokemon) {
+        $this->name = $name;
+        $this->imageUrl = $imageUrl;
+        $this->hp = $hp;
+        $this->attackPokemon = $attackPokemon;
+    }
+
+    public function getName(): string {
+      return $this->name;
+    }
+    public function getImageUrl(): string {
+      return $this->imageUrl;
+    }
+    public function getHp(): int {
+      return $this->hp;
+    }
+    public function getAttackPokemon(): AttackPokemon {
+      return $this->attackPokemon;
+    }
+    public function setName(string $name) {
+      $this->name = $name;
+    }
+    public function setImageUrl(string $imageUrl) {
+      $this->imageUrl = $imageUrl;
+    } 
+    public function setHp(int $hp) {
+      $this->hp = max(0, $hp); 
+    } 
+    public function setAttackPokemon(AttackPokemon $attackPokemon) {
+      $this->attackPokemon = $attackPokemon;
+    }
+
+    public function isDead(): bool {
+        return $this->hp <= 0;
+    }
+
+    public function attack(Pokemon $opponent) {
+        $attackPoints = $this->attackPokemon->getAttackPoints();
+        $specialAttackUsed = (rand(1, 100) <= $this->attackPokemon->probabilitySpecialAttack);
+        if ($specialAttackUsed) {
+            $attackPoints *= $this->attackPokemon->specialAttack;
+        }
+        $opponent->hp -= $attackPoints;
+        return $attackPoints;
+    }
+
+    public function displayInfo() {
+        echo "<div style='border:1px solid black; padding:10px; margin:10px; text-align:center; width:40%; background:white;'>";
+        echo "<h3>{$this->name}</h3>";
+        echo "<img src='{$this->imageUrl}' width='120'><br>";
+        echo "Points : {$this->hp}<br>";
+        echo "Min Attack Points : {$this->attackPokemon->attackMinimal}<br>";
+        echo "Max Attack Points : {$this->attackPokemon->attackMaximal}<br>";
+        echo "Special Attack : x{$this->attackPokemon->specialAttack}<br>";
+        echo "Probability Special Attack : {$this->attackPokemon->probabilitySpecialAttack}%";
+        echo "</div>";
+    }
+
+}
+
+
+$Glazardan = new Pokemon("Glazardan", "https://pngimg.com/uploads/pokemon/pokemon_PNG125.png", 100, new AttackPokemon(10, 20, 2, 30));
+$Luc = new Pokemon("Luc", "https://pngimg.com/uploads/pokemon/pokemon_PNG17.png", 120, new AttackPokemon(8, 18, 2.5, 25));
+
+$round = 1;
+echo "<div style='width:80%; margin:auto; text-align:center; font-family:Arial;'>";
+
+while (!$Glazardan->isDead() && !$Luc->isDead()) {
+    echo "<div style='display:flex; justify-content:space-around; align-items:center; margin-top:20px;'>";
+    $Glazardan->displayInfo();
+    echo "<h2>VS</h2>";
+    $Luc->displayInfo();
+    echo "</div>";
+
+    
+    $damage1 = $Glazardan->attack($Luc);
+    $damage2 = $Luc->attack($Glazardan);
+
+   
+    $roundColor = ($damage1 > $damage2) ? "#d4edda" : "#f8d7da"; // Vert si Charizard fait plus de dégâts, rouge sinon
+    echo "<div style='background:$roundColor; padding:10px; margin:5px; font-weight:bold;'>Round $round | Dégâts : $damage1 - $damage2</div>";
+
+    $round++;
+}
+
+
+echo "<div style='display:flex; justify-content:space-around; align-items:center; margin-top:20px;'>";
+$Glazardan->displayInfo();
+$Luc->displayInfo();
+echo "</div>";
+
+echo "<div style='background:#d4edda; padding:15px; margin:10px; font-weight:bold; font-size:18px;'>";
+echo "Le vainqueur est ";
+if ($Glazardan->getHp() > 0) {
+    echo "<img src='{$Glazardan->getImageUrl()}' width='50'> {$Glazardan->getName()}";
+} else {
+    echo "<img src='{$Luc->getImageUrl()}' width='50'> {$Luc->getName()}";
+}
+echo "</div>";
+
+echo "</div>";
+?>
+
+
+
 
